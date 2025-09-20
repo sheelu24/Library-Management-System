@@ -1,119 +1,65 @@
-package entity;
+package main;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
-public class Lending {
-	
-	static int id = 1;
+import entity.Book;
+import entity.Branch;
+import entity.Lending;
+import entity.LibrarySystem;
+import entity.Patron;
+import entity.Reservation;
 
-	private int LendingID;
-	private Book book;
-	private Patron Patron;
-	private Date checkoutDate;
-	private Date dueDate;
-	private Date returnDate;
-	
-	public Lending(int lendingID, Book book, Patron Patron) {
-		this.LendingID = lendingID;
-		this.book = book;
-		this.Patron = Patron;
-		this.checkoutDate = new Date();
-		this.dueDate = new Date();
-		this.returnDate = null;
-	}
+public class RunLibrarySystem {
 
-	public int getLendingID() {
-		return LendingID;
-	}
-	
-	public void setLendingID(int LendingID) {
-		this.LendingID = LendingID;
-	}
-	
-	public Book getBook() {
-		return book;
-	}
-	
-	public void setBook(Book book) {
-		this.book = book;
-	}
-	
-	public Patron getPatron() {
-		return Patron;
-	}
-	
-	public void setPatron(Patron Patron) {
-		this.Patron = Patron;
-	}
-	
-	public Date getCheckoutDate() {
-		return checkoutDate;
-	}
-	
-	public void setCheckoutDate(Date checkoutDate) {
-		this.checkoutDate = checkoutDate;
-	}
-	
-	public Date getDueDate() {
-		return dueDate;
-	}
-
-	public void setDueDate(Date dueDate) {
-		this.dueDate = dueDate;
-	}
-
-	public Date getReturnDate() {
-		return returnDate;
-	}
-	
-	public void setReturnDate(Date returnDate) {
-		this.returnDate = returnDate;
-	}
-	//lend book
-	public static void lendBook(Book book , Patron patron) {
+	public static void main(String[] args) {
 		
-		if(book.getStatus()) {
-			if(book.getReserve() != null && book.getReserve().getPatron().getId() != patron.getId()) {
-				System.out.println(" Book " + book.getTitle() + " reserved by another patron ");
-			}else {
-				List<Lending> lendings = patron.getLending();
-				lendings.add(new Lending(id++,book,patron));
-				patron.setLending(lendings);
-				book.setStatus(false);
-				book.setReserve(null);
-				System.out.println(" Book " + book.getTitle() + " checkout complete ");
-			}
-		}else {
-			System.out.println(" Book " + book.getTitle() + " borrowed by another patron ");
-		}
-	}
-	//return book
-	public static void returnBook( Book book, Patron patron) {
+		Book b1 = new Book("hello","123","jack");
+		Book b2 = new Book("world","456","jack");
 		
-		List<Lending> lendings = patron.getLending();
-		Lending lend = null;
-		for( Lending l : lendings) {
-			if(l.getBook().getIsbn() == book.getIsbn() && l.getReturnDate() == null ) {
-				lend = l;
-				lendings.remove(l);
-				break;
-			}
-		}
+		Branch branch1 = new Branch("lib", "banglore");
+		branch1.addBook(b1);
+		branch1.addBook(b2);
+		System.out.println("------------------------");
 		
-		if(lend == null ) {
-			System.out.println(" Only the patron who borrowed can return ");
-		}else {
-			lend.setReturnDate(new Date());
-			lendings.add(lend);
-			patron.setLending(lendings);
-			book.setStatus(true);
-			if(book.getReserve() != null ) {
-				System.out.println(" Patron " + book.getReserve().getPatron().getName() +" reserved book is available");
-			}
-		}
+		LibrarySystem library = new LibrarySystem("public library");
+		library.addBranch(branch1);
+		System.out.println("------------------------");
+		
+		Patron p1 = new Patron("Sam");
+		Patron p2 = new Patron("Rio");
+		library.addPatrons(p1);
+		library.addPatrons(p2);
+		System.out.println("------------------------");
+		
+		Lending.lendBook(b1, p1); // completed
+		Lending.lendBook(b1, p2); // book not available
+		Lending.lendBook(b2, p2); // completed
+		System.out.println("------------------------");
+		
+		Reservation.reserveBook(b1, p2); // reserve book 
+		Reservation.reserveBook(b1, p1); // already reserved book
+		System.out.println(" reserve " + b1.getTitle() + " by " + b1.getReserve().getPatron().getName());
+		System.out.println("------------------------");
+		
+		Lending.returnBook(b2, p2); // return book that patron doesn't have 
+		Lending.returnBook(b1, p1); // return book
+		p1.getLending().forEach(l -> System.out.println(" book " + l.getBook().getTitle() + " returned on "+ l.getReturnDate() ));
+		System.out.println("------------------------");
+		
+		Lending.lendBook(b1, p2); // get reserved book
+		System.out.println("------------------------");
+		
+		Branch branch2 = new Branch("lib2", "pune");
+		branch1.transferBook(b2, branch2); // transfer book
+		branch1.getBooks().forEach(b -> System.out.println(" b1 book " + b.getTitle()));
+		branch2.getBooks().forEach(b -> System.out.println(" b2 book " + b.getTitle()));
+		System.out.println("------------------------");
+		
+		List<Book> foundBook = branch2.serachTitleBook(b2.getTitle()); // book present
+		List<Book> notFoundBook = branch2.serachTitleBook(b1.getTitle()); // book not present
+		System.out.println(" found " + foundBook.size() + "  not found " + notFoundBook.size() );
+		System.out.println("------------------------");
+		
 	}
-	
 	
 }
