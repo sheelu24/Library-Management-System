@@ -81,10 +81,4 @@ public class Branch {
 				.filter(b -> b.getIsbn().equalsIgnoreCase(isbn))
 				.findFirst();
 	}
-	//Transfer
-	public void transferBook(Book book, Branch branch) {
-		this.removeBook(book);
-		branch.addBook(book);
-		System.out.println(" Book " + book.getTitle() + " transfered successfully");
-	}
 }

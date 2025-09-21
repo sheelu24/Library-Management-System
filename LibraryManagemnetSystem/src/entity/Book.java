@@ -6,55 +6,33 @@ public class Book {
 	private String title;
 	private String isbn;
 	private String author;
-	private Boolean status;//borrowed
-	private Reservation reserve;//reserved
+	private BookStatus status;
 	
 	public Book(String title, String isbn, String author) {
 		this.title = title;
 		this.isbn = isbn;
 		this.author = author;
-		this.status = true;
-		this.reserve = null;
+		this.status = BookStatus.Availale;
 	}
 
-	public String getTitle() {
-		return title;
-	}
-	
-	public void setTitle(String title) {
-		this.title = title;
-	}
-	
 	public String getIsbn() {
 		return isbn;
 	}
-	
-	public void setIsbn(String isbn) {
-		this.isbn = isbn;
+
+	public String getStatus() {
+		return this.status.toString();
 	}
-	
-	public String getAuthor() {
-		return author;
-	}
-	
-	public void setAuthor(String author) {
-		this.author = author;
-	}
-	
-	public Boolean getStatus() {
-		return status;
-	}
-	
-	public void setStatus(Boolean status) {
+
+	public void setStatus(BookStatus status) {
 		this.status = status;
 	}
 
-	public Reservation getReserve() {
-		return reserve;
+	public String getTitle() {
+		return this.title;
 	}
 
-	public void setReserve(Reservation reserve) {
-		this.reserve = reserve;
+	public String getAuthor() {
+		return author;
 	}
 
 }
