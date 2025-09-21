@@ -22,7 +22,6 @@ Entities
 - Reservation
 
 Library System
-- Name
 - List<branch>
 - List<pateron>
 —----------------------------------
@@ -30,6 +29,7 @@ Library System
 + remove branch
 + Add Patron
 + Remove Patron
++ Transfer Book
 
 Branch
 - Name
@@ -40,20 +40,18 @@ Branch
 + Add book
 + Remove book
 + Search book
-+ Transfer book
 
 Book
 - ISBN
 - Title
 - Author
 - Status
-- reservation
+- reserva
 
 Patron
 - Name
 - ID
 - Joining date
-- List<Lending>
 
 Lending
 - Lending id
@@ -62,14 +60,21 @@ Lending
 - Checkout Date
 - dueDate
 - Return date
-—----------------------------------
-+ Borrow book
-+ Return book
 
 Reserve
 - Reserve id
 - Book
 - patron
-—----------------------------------
-+ Reserve book
-+ Cancel reservation
+
+Lending Service
+- Lending Record
++ lend Book
++ Return Book
+
+Reservation Service
+- Reservation record
++ Reserve Book
++ Cancel Reserve
+
+  <img width="558" height="367" alt="image" src="https://github.com/user-attachments/assets/9445ec22-0e24-4fa4-b1bb-93650ef734e2" />
+
